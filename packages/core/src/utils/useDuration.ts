@@ -25,8 +25,9 @@ import {useThread} from './useThread';
  *
  * @returns The duration of the event in seconds.
  */
-export function useDuration(name: string): number {
+export function useDuration(name: string, lane: number = 0): number {
+  console.log("duration: ",lane);
   const scene = useScene();
   const thread = useThread();
-  return scene.timeEvents.register(name, thread.time());
+  return scene.timeEvents.register(name, thread.time(), lane);
 }

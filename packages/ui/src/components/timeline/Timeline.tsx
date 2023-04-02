@@ -8,6 +8,8 @@ import {
   useSize,
   useStateChange,
   useStorage,
+  useSubscribableValue,
+  //useSubscribableValue,
 } from '../../hooks';
 import {Playhead} from './Playhead';
 import {Timestamps} from './Timestamps';
@@ -23,6 +25,9 @@ import {
 } from '../../contexts';
 import clsx from 'clsx';
 import {useShortcut} from '../../hooks/useShortcut';
+
+//Adds scene
+import {useScenes} from '../../hooks';
 
 const ZOOM_SPEED = 0.1;
 const ZOOM_MIN = 0.5;
@@ -40,6 +45,22 @@ export function Timeline() {
   const [offset, setOffset] = useStorage('timeline-offset', 0);
   const [scale, setScale] = useStorage('timeline-scale', 1);
   const isReady = duration > 0;
+
+  //Get actual scenes
+  const scenes = useScenes();
+  //const events = useSubscribableValue(scenes.timeEvents.onChanged);
+  
+  let maxLane = 0; 
+  scenes.forEach(scene => {
+    useSubscribableValue(scene.timeEvents.onChanged).forEach(event => {
+      console.log("EVENT: ",event)
+      maxLane = Math.max(maxLane,event.lane);
+    });
+  });
+  const rows = [];
+  for (let i = 0; i <= maxLane; i++) {
+    rows.push(<LabelTrack lane={i} />);
+  }
 
   useLayoutEffect(() => {
     containerRef.current.scrollLeft = offset;
@@ -133,7 +154,9 @@ export function Timeline() {
       [sizes],
     ),
   );
-
+  
+  //const events = useSubscribableValue(props.scene.timeEvents.onChanged);
+  
   useLayoutEffect(() => {
     containerRef.current.scrollLeft = offset;
   }, [scale]);
@@ -216,7 +239,7 @@ export function Timeline() {
               <Timestamps />
               <div className={styles.trackContainer}>
                 <SceneTrack />
-                <LabelTrack />
+                {rows}
                 <AudioTrack />
               </div>
               <Playhead />

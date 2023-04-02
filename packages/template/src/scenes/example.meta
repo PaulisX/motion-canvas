@@ -2,8 +2,19 @@
   "version": 1,
   "timeEvents": [
     {
-      "name": "circle",
-      "targetTime": 3
+      "name": "color",
+      "targetTime": 9.663854166666653,
+      "lane": 1
+    },
+    {
+      "name": "sus",
+      "targetTime": 8.160208333333339,
+      "lane": 0
+    },
+    {
+      "name": "cus",
+      "targetTime": 13.492929842713382,
+      "lane": 0
     }
   ],
   "seed": 3073416149

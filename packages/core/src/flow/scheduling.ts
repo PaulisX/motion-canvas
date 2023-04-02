@@ -21,9 +21,10 @@ decorate(waitUntil, threadable());
 export function* waitUntil(
   event: string,
   after?: ThreadGenerator,
+  lane: number = 0
 ): ThreadGenerator {
-  yield* waitFor(useDuration(event));
-
+  yield* waitFor(useDuration(event, lane));
+  console.log("wait: ",lane);
   if (after) {
     yield* after;
   }

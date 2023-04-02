@@ -30,7 +30,7 @@ export class EditableTimeEvents implements TimeEvents {
     scene.meta.timeEvents.onChanged.subscribe(this.handleMetaChanged, false);
   }
 
-  public set(name: string, offset: number, preserve = true) {
+  public set(name: string, offset: number, preserve = true, lane:number = 0) {
     if (!this.lookup[name] || this.lookup[name].offset === offset) {
       return;
     }
@@ -39,6 +39,7 @@ export class EditableTimeEvents implements TimeEvents {
       ...this.lookup[name],
       targetTime: this.lookup[name].initialTime + offset,
       offset,
+      lane,
     };
     this.registeredEvents[name] = this.lookup[name];
     this.events.current = Object.values(this.registeredEvents);
@@ -46,7 +47,8 @@ export class EditableTimeEvents implements TimeEvents {
     this.scene.reload();
   }
 
-  public register(name: string, initialTime: number): number {
+  public register(name: string, initialTime: number, lane: number = 0): number {
+    console.log("regiseter colision", lane);
     if (this.collisionLookup.has(name)) {
       this.scene.logger.error({
         message: `name "${name}" has already been used for another event name.`,
@@ -57,6 +59,7 @@ export class EditableTimeEvents implements TimeEvents {
 
     this.collisionLookup.add(name);
     if (!this.lookup[name]) {
+      console.log("Add to lookup");
       this.didEventsChange = true;
       this.lookup[name] = {
         name,
@@ -64,10 +67,18 @@ export class EditableTimeEvents implements TimeEvents {
         targetTime: initialTime,
         offset: 0,
         stack: new Error().stack,
+        lane: lane,
       };
     } else {
       let changed = false;
       const event = {...this.lookup[name]};
+      console.log("Exists in lookup: ",event.lane);
+      
+      if (event.lane !== lane) {
+        event.lane = lane;
+        changed = true;
+      }
+
 
       const stack = new Error().stack;
       if (event.stack !== stack) {
@@ -99,7 +110,7 @@ export class EditableTimeEvents implements TimeEvents {
     }
 
     this.registeredEvents[name] = this.lookup[name];
-
+    console.log("registered event set: ",this.registeredEvents[name].lane)
     return this.lookup[name].offset;
   }
 
@@ -127,6 +138,7 @@ export class EditableTimeEvents implements TimeEvents {
         event => ({
           name: event.name,
           targetTime: event.targetTime,
+          lane: event.lane
         }),
       );
       this.scene.meta.timeEvents.set(this.previousReference);
@@ -156,6 +168,7 @@ export class EditableTimeEvents implements TimeEvents {
         name: event.name,
         initialTime: 0,
         offset: 0,
+        lane:3
       };
 
       this.lookup[event.name] = {

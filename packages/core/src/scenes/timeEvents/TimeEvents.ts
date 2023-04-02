@@ -20,7 +20,7 @@ export interface TimeEvents {
    *                   preserved. When set to `true` their offsets will be
    *                   adjusted to keep them in place.
    */
-  set(name: string, offset: number, preserve?: boolean): void;
+  set(name: string, offset: number, preserve?: boolean, lane?:number): void;
   /**
    * Register a time event.
    *
@@ -32,5 +32,5 @@ export interface TimeEvents {
    *
    * @internal
    */
-  register(name: string, initialTime: number): number;
+  register(name: string, initialTime: number, lane: number): number;
 }

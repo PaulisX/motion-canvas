@@ -10,4 +10,5 @@ export interface SerializedTimeEvent {
    * {@inheritDoc TimeEvent.targetTime}
    */
   targetTime: number;
+  // lane: number;
 }

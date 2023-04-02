@@ -29,7 +29,7 @@ export function Label({event, scene}: LabelProps) {
       e => {
         const newFrame = Math.max(0, eventTime);
         if (event.offset !== newFrame) {
-          scene.timeEvents.set(event.name, newFrame, e.shiftKey);
+          scene.timeEvents.set(event.name, newFrame, e.shiftKey, event.lane);
         }
       },
       [event, eventTime],

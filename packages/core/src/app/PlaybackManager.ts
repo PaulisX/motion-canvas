@@ -54,6 +54,7 @@ export class PlaybackManager {
     if (this.currentSceneReference === null) {
       throw new Error('PlaybackManager has not been properly initialized');
     }
+    console.log("scene events: ",this.currentSceneReference.current.timeEvents);
     return this.currentSceneReference.current;
   }
 

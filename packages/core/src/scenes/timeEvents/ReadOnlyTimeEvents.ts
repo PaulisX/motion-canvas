@@ -21,7 +21,8 @@ export class ReadOnlyTimeEvents implements TimeEvents {
     // do nothing
   }
 
-  public register(name: string, initialTime: number): number {
+  public register(name: string, initialTime: number, lane: number = 0): number {
+    console.log("regiseter set", lane);
     let duration = this.lookup.get(name);
     if (duration === undefined) {
       const event = this.scene.meta.timeEvents

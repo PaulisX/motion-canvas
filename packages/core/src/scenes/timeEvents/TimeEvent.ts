@@ -24,8 +24,15 @@ export interface TimeEvent {
    * Duration of the event in seconds.
    */
   offset: number;
+  
+  /**
+   * Self added event lane
+   */
+  lane: number;
+
   /**
    * Stack trace at the moment of registration.
    */
   stack?: string;
+
 }
